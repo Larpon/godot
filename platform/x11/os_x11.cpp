@@ -2462,11 +2462,6 @@ void OS_X11::process_xevents() {
 					if(String(XGetAtomName(x11_display, req->selection)) == "PRIMARY")
 						clip = OS::get_clipboard_primary().utf8();
 
-					ERR_PRINT("LMP OS_X11::process_xevents SELECTION_REQUEST\n");
-					printf("Property %s \n", XGetAtomName(x11_display, req->property));
-					printf("Target %s \n", XGetAtomName(x11_display, req->target));
-					printf("Selection %s \n", XGetAtomName(x11_display, req->selection));
-
 					XChangeProperty(x11_display,
 							req->requestor,
 							req->property,
@@ -2517,8 +2512,6 @@ void OS_X11::process_xevents() {
 
 			case SelectionNotify:
 
-				ERR_PRINT("LMP OS_X11::process_xevents SELECTION_NOTIFY\n");
-				//printf("Property %s \n", XGetAtomName(x11_display, p.type));
 				if (event.xselection.target == requested) {
 
 					Property p = read_property(x11_display, x11_window, XInternAtom(x11_display, "PRIMARY", 0));

@@ -53,7 +53,6 @@ class OS {
 	bool low_processor_usage_mode;
 	int low_processor_usage_mode_sleep_usec;
 	bool _verbose_stdout;
-	//¤lmp mutable Map<String, Clipboard> _clipboards;
 	String _local_clipboard;
 	String _primary_clipboard;
 	uint64_t _msec_splash;
@@ -79,11 +78,6 @@ protected:
 public:
 	typedef void (*ImeCallback)(void *p_inp, String p_text, Point2 p_selection);
 	typedef bool (*HasServerFeatureCallback)(const String &p_feature);
-
-	enum ClipboardType {
-		CLIPBOARDTYPE_DEFAULT, /**< Default OS clipboard */
-		CLIPBOARDTYPE_X11_PRIMARY  /**< X11 specific, "PRIMARY" (Middle Mouse Button) */
-	};
 
 	enum PowerState {
 		POWERSTATE_UNKNOWN, /**< cannot determine power status */
