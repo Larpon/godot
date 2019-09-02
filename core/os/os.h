@@ -35,7 +35,6 @@
 #include "core/image.h"
 #include "core/io/logger.h"
 #include "core/list.h"
-#include "core/os/clipboard.h"
 #include "core/os/main_loop.h"
 #include "core/ustring.h"
 #include "core/vector.h"
