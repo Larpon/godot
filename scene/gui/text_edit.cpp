@@ -468,6 +468,7 @@ void TextEdit::_update_selection_mode_pointer() {
 	_get_mouse_pos(Point2i(mp.x, mp.y), row, col);
 
 	select(selection.selecting_line, selection.selecting_column, row, col);
+	OS::get_singleton()->set_clipboard_primary(get_selection_text());
 
 	cursor_set_line(row, false);
 	cursor_set_column(col);
@@ -527,6 +528,7 @@ void TextEdit::_update_selection_mode_word() {
 			cursor_set_column(selection.to_column);
 		}
 	}
+	OS::get_singleton()->set_clipboard_primary(get_selection_text());
 
 	update();
 

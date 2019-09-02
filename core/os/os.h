@@ -52,9 +52,10 @@ class OS {
 	bool _keep_screen_on;
 	bool low_processor_usage_mode;
 	int low_processor_usage_mode_sleep_usec;
-    bool _verbose_stdout;
-    mutable Map<String, Clipboard> _clipboards;
-    String _local_clipboard;
+	bool _verbose_stdout;
+	//¤lmp mutable Map<String, Clipboard> _clipboards;
+	String _local_clipboard;
+	String _primary_clipboard;
 	uint64_t _msec_splash;
 	bool _no_window;
 	int _exit_code;
@@ -78,7 +79,12 @@ protected:
 public:
 	typedef void (*ImeCallback)(void *p_inp, String p_text, Point2 p_selection);
 	typedef bool (*HasServerFeatureCallback)(const String &p_feature);
-z
+
+	enum ClipboardType {
+		CLIPBOARDTYPE_DEFAULT, /**< Default OS clipboard */
+		CLIPBOARDTYPE_X11_PRIMARY  /**< X11 specific, "PRIMARY" (Middle Mouse Button) */
+	};
+
 	enum PowerState {
 		POWERSTATE_UNKNOWN, /**< cannot determine power status */
 		POWERSTATE_ON_BATTERY, /**< Not plugged in, running on the battery */
@@ -177,12 +183,11 @@ public:
 	virtual void set_window_title(const String &p_title) = 0;
 
 	virtual void set_clipboard(const String &p_text);
-    virtual String get_clipboard() const;
+	virtual String get_clipboard() const;
 
-    /*
-    virtual void set_clipboard(const String &p_text, const ClipboardType p_clipboard_type);
-    virtual String get_clipboard(const ClipboardType p_clipboard_type) const;
-*/
+	virtual void set_clipboard_primary(const String &p_text);
+	virtual String get_clipboard_primary() const;
+
 	virtual void set_video_mode(const VideoMode &p_video_mode, int p_screen = 0) = 0;
 	virtual VideoMode get_video_mode(int p_screen = 0) const = 0;
 	virtual void get_fullscreen_mode_list(List<VideoMode> *p_list, int p_screen = 0) const = 0;

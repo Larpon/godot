@@ -175,18 +175,14 @@ String OS::get_clipboard() const {
 
 	return _local_clipboard;
 }
-/*
-void OS::set_clipboard(const String &p_text, const ClipboardType p_clipboard_type) {
-    if(p_clipboard_type == CLIPBOARDTYPE_DEFAULT || p_clipboard_type == CLIPBOARDTYPE_X11_CLIPBOARD)
-        _local_clipboard = p_text;
-    if(p_clipboard_type == CLIPBOARDTYPE_X11_PRIMARY)
-        _local_clipboard = p_text;
+
+void OS::set_clipboard_primary(const String &p_text) {
+		_primary_clipboard = p_text;
 }
-String OS::get_clipboard(const ClipboardType p_clipboard_type) const {
-    if(p_clipboard_type == CLIPBOARDTYPE_DEFAULT || p_clipboard_type == CLIPBOARDTYPE_X11_CLIPBOARD)
-        return _local_clipboard;
+String OS::get_clipboard_primary() const {
+	return _primary_clipboard;
 }
-*/
+
 String OS::get_executable_path() const {
 
 	return _execpath;

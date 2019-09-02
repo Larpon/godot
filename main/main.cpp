@@ -2051,6 +2051,7 @@ void Main::cleanup() {
 	OS::get_singleton()->_cmdline.clear();
 	OS::get_singleton()->_execpath = "";
 	OS::get_singleton()->_local_clipboard = "";
+	OS::get_singleton()->_primary_clipboard = "";
 
 	ResourceLoader::clear_translation_remaps();
 	ResourceLoader::clear_path_remaps();

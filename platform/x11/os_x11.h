@@ -243,6 +243,9 @@ public:
 	virtual void set_clipboard(const String &p_text);
 	virtual String get_clipboard() const;
 
+	virtual void set_clipboard_primary(const String &p_text);
+	virtual String get_clipboard_primary() const;
+
 	virtual void release_rendering_thread();
 	virtual void make_rendering_thread();
 	virtual void swap_buffers();

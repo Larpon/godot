@@ -2455,7 +2455,18 @@ void OS_X11::process_xevents() {
 						req->target == XA_STRING ||
 						req->target == XInternAtom(x11_display, "text/plain;charset=utf-8", 0) ||
 						req->target == XInternAtom(x11_display, "text/plain", 0)) {
+
+					// Default is to use 'CLIPBOARD'
 					CharString clip = OS::get_clipboard().utf8();
+
+					if(String(XGetAtomName(x11_display, req->selection)) == "PRIMARY")
+						clip = OS::get_clipboard_primary().utf8();
+
+					ERR_PRINT("LMP OS_X11::process_xevents SELECTION_REQUEST\n");
+					printf("Property %s \n", XGetAtomName(x11_display, req->property));
+					printf("Target %s \n", XGetAtomName(x11_display, req->target));
+					printf("Selection %s \n", XGetAtomName(x11_display, req->selection));
+
 					XChangeProperty(x11_display,
 							req->requestor,
 							req->property,
@@ -2506,6 +2517,8 @@ void OS_X11::process_xevents() {
 
 			case SelectionNotify:
 
+				ERR_PRINT("LMP OS_X11::process_xevents SELECTION_NOTIFY\n");
+				//printf("Property %s \n", XGetAtomName(x11_display, p.type));
 				if (event.xselection.target == requested) {
 
 					Property p = read_property(x11_display, x11_window, XInternAtom(x11_display, "PRIMARY", 0));
@@ -2729,6 +2742,24 @@ String OS_X11::get_clipboard() const {
 
 	return ret;
 }
+
+void OS_X11::set_clipboard_primary(const String &p_text) {
+	OS::set_clipboard_primary(p_text);
+
+	XSetSelectionOwner(x11_display, XA_PRIMARY, x11_window, CurrentTime);
+	XSetSelectionOwner(x11_display, XInternAtom(x11_display, "PRIMARY", 0), x11_window, CurrentTime);
+}
+String OS_X11::get_clipboard_primary() const {
+	String ret;
+	ret = _get_clipboard(XInternAtom(x11_display, "PRIMARY", 0), x11_window, x11_display, OS::get_clipboard_primary());
+
+	if (ret == "") {
+		ret = _get_clipboard(XA_PRIMARY, x11_window, x11_display, OS::get_clipboard());
+	};
+
+	return ret;
+}
+
 
 String OS_X11::get_name() const {
 
