@@ -63,6 +63,25 @@ void LineEdit::_gui_input(Ref<InputEvent> p_event) {
 			return;
 		}
 
+		if (b->is_pressed() && b->get_button_index() == BUTTON_MIDDLE) {
+			String paste_buffer = OS::get_singleton()->get_clipboard_primary().strip_escapes();
+
+			if (paste_buffer != "") {
+
+				if (selection.enabled) selection.enabled = false;
+				set_cursor_at_pixel_pos(b->get_position().x);
+				append_at_cursor(paste_buffer);
+
+				if (!text_changed_dirty) {
+					if (is_inside_tree()) {
+						MessageQueue::get_singleton()->push_call(this, "_text_changed");
+					}
+					text_changed_dirty = true;
+				}
+				return;
+			}
+		}
+
 		if (b->get_button_index() != BUTTON_LEFT)
 			return;
 
@@ -93,6 +112,8 @@ void LineEdit::_gui_input(Ref<InputEvent> p_event) {
 					selection.begin = 0;
 					selection.end = text.length();
 					selection.doubleclick = true;
+
+					OS::get_singleton()->set_clipboard_primary(text);
 				}
 
 				selection.drag_attempt = false;
@@ -151,6 +172,7 @@ void LineEdit::_gui_input(Ref<InputEvent> p_event) {
 			if (selection.creating) {
 				set_cursor_at_pixel_pos(m->get_position().x);
 				selection_fill_at_cursor();
+				OS::get_singleton()->set_clipboard_primary(text.substr(selection.begin,selection.end));
 			}
 		}
 	}
