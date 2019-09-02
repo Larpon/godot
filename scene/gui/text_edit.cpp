@@ -2344,15 +2344,18 @@ void TextEdit::_gui_input(const Ref<InputEvent> &p_gui_input) {
 				int row, col;
 				_get_mouse_pos(Point2i(mb->get_position().x, mb->get_position().y), row, col);
 
-				begin_complex_operation();
+				if (!clipboard.empty()) {
+					begin_complex_operation();
 
-				cursor_set_line(row, true, false);
-				cursor_set_column(col);
-				_insert_text_at_cursor(clipboard);
+					cursor_set_line(row, true, false);
+					cursor_set_column(col);
+					_insert_text_at_cursor(clipboard);
 
-				end_complex_operation();
+					end_complex_operation();
 
-				update();
+					grab_focus();
+					update();
+				}
 			}
 
 			if (mb->get_button_index() == BUTTON_RIGHT && context_menu_enabled) {
