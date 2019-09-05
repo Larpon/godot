@@ -1,5 +1,5 @@
 /*************************************************************************/
-/*  button.h                                                             */
+/*  rich_text_effect.h                                                   */
 /*************************************************************************/
 /*                       This file is part of:                           */
 /*                           GODOT ENGINE                                */
@@ -28,62 +28,60 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
 /*************************************************************************/
 
-#ifndef BUTTON_H
-#define BUTTON_H
+#ifndef RICH_TEXT_EFFECT_H
+#define RICH_TEXT_EFFECT_H
 
-#include "scene/gui/base_button.h"
+#include "core/resource.h"
 
-class Button : public BaseButton {
-
-	GDCLASS(Button, BaseButton);
-
-public:
-	enum TextAlign {
-		ALIGN_LEFT,
-		ALIGN_CENTER,
-		ALIGN_RIGHT
-	};
-
-private:
-	bool flat;
-	String text;
-	String xl_text;
-	Ref<Texture> icon;
-	bool expand_icon;
-	bool clip_text;
-	TextAlign align;
-	float _internal_margin[4];
+class RichTextEffect : public Resource {
+	GDCLASS(RichTextEffect, Resource);
+	OBJ_SAVE_TYPE(RichTextEffect);
 
 protected:
-	void _set_internal_margin(Margin p_margin, float p_value);
-	void _notification(int p_what);
 	static void _bind_methods();
 
 public:
-	virtual Size2 get_minimum_size() const;
+	Variant get_bbcode() const;
+	bool _process_effect_impl(Ref<class CharFXTransform> p_cfx);
 
-	void set_text(const String &p_text);
-	String get_text() const;
-
-	void set_icon(const Ref<Texture> &p_icon);
-	Ref<Texture> get_icon() const;
-
-	void set_expand_icon(bool p_expand_icon);
-	bool is_expand_icon() const;
-
-	void set_flat(bool p_flat);
-	bool is_flat() const;
-
-	void set_clip_text(bool p_clip_text);
-	bool get_clip_text() const;
-
-	void set_text_align(TextAlign p_align);
-	TextAlign get_text_align() const;
-
-	Button(const String &p_text = String());
-	~Button();
+	RichTextEffect();
 };
 
-VARIANT_ENUM_CAST(Button::TextAlign);
+class CharFXTransform : public Reference {
+	GDCLASS(CharFXTransform, Reference);
 
-#endif
+protected:
+	static void _bind_methods();
+
+public:
+	uint64_t relative_index;
+	uint64_t absolute_index;
+	bool visibility;
+	Point2 offset;
+	Color color;
+	CharType character;
+	float elapsed_time;
+	Dictionary environment;
+
+	CharFXTransform();
+	uint64_t get_relative_index() { return relative_index; }
+	void set_relative_index(uint64_t p_index) { relative_index = p_index; }
+	uint64_t get_absolute_index() { return absolute_index; }
+	void set_absolute_index(uint64_t p_index) { absolute_index = p_index; }
+	float get_elapsed_time() { return elapsed_time; }
+	void set_elapsed_time(float p_elapsed_time) { elapsed_time = p_elapsed_time; }
+	bool is_visible() { return visibility; }
+	void set_visibility(bool p_vis) { visibility = p_vis; }
+	Point2 get_offset() { return offset; }
+	void set_offset(Point2 p_offset) { offset = p_offset; }
+	Color get_color() { return color; }
+	void set_color(Color p_color) { color = p_color; }
+	int get_character() { return (int)character; }
+	void set_character(int p_char) { character = (CharType)p_char; }
+	Dictionary get_environment() { return environment; }
+	void set_environment(Dictionary p_environment) { environment = p_environment; }
+
+	Variant get_value_or(String p_key, Variant p_default_value);
+};
+
+#endif // RICH_TEXT_EFFECT_H

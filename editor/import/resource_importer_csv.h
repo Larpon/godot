@@ -1,5 +1,5 @@
 /*************************************************************************/
-/*  button.h                                                             */
+/*  resource_importer_csv.h                                              */
 /*************************************************************************/
 /*                       This file is part of:                           */
 /*                           GODOT ENGINE                                */
@@ -28,62 +28,30 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
 /*************************************************************************/
 
-#ifndef BUTTON_H
-#define BUTTON_H
+#ifndef RESOURCEIMPORTERCSV_H
+#define RESOURCEIMPORTERCSV_H
 
-#include "scene/gui/base_button.h"
+#include "core/io/resource_importer.h"
 
-class Button : public BaseButton {
-
-	GDCLASS(Button, BaseButton);
-
-public:
-	enum TextAlign {
-		ALIGN_LEFT,
-		ALIGN_CENTER,
-		ALIGN_RIGHT
-	};
-
-private:
-	bool flat;
-	String text;
-	String xl_text;
-	Ref<Texture> icon;
-	bool expand_icon;
-	bool clip_text;
-	TextAlign align;
-	float _internal_margin[4];
-
-protected:
-	void _set_internal_margin(Margin p_margin, float p_value);
-	void _notification(int p_what);
-	static void _bind_methods();
+class ResourceImporterCSV : public ResourceImporter {
+	GDCLASS(ResourceImporterCSV, ResourceImporter);
 
 public:
-	virtual Size2 get_minimum_size() const;
+	virtual String get_importer_name() const;
+	virtual String get_visible_name() const;
+	virtual void get_recognized_extensions(List<String> *p_extensions) const;
+	virtual String get_save_extension() const;
+	virtual String get_resource_type() const;
 
-	void set_text(const String &p_text);
-	String get_text() const;
+	virtual int get_preset_count() const;
+	virtual String get_preset_name(int p_idx) const;
 
-	void set_icon(const Ref<Texture> &p_icon);
-	Ref<Texture> get_icon() const;
+	virtual void get_import_options(List<ImportOption> *r_options, int p_preset = 0) const;
+	virtual bool get_option_visibility(const String &p_option, const Map<StringName, Variant> &p_options) const;
 
-	void set_expand_icon(bool p_expand_icon);
-	bool is_expand_icon() const;
+	virtual Error import(const String &p_source_file, const String &p_save_path, const Map<StringName, Variant> &p_options, List<String> *r_platform_variants, List<String> *r_gen_files = NULL, Variant *r_metadata = NULL);
 
-	void set_flat(bool p_flat);
-	bool is_flat() const;
-
-	void set_clip_text(bool p_clip_text);
-	bool get_clip_text() const;
-
-	void set_text_align(TextAlign p_align);
-	TextAlign get_text_align() const;
-
-	Button(const String &p_text = String());
-	~Button();
+	ResourceImporterCSV();
 };
 
-VARIANT_ENUM_CAST(Button::TextAlign);
-
-#endif
+#endif // RESOURCEIMPORTERCSV_H

@@ -1,5 +1,5 @@
 /*************************************************************************/
-/*  button.h                                                             */
+/*  editor_vcs_interface.h                                               */
 /*************************************************************************/
 /*                       This file is part of:                           */
 /*                           GODOT ENGINE                                */
@@ -28,62 +28,56 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
 /*************************************************************************/
 
-#ifndef BUTTON_H
-#define BUTTON_H
+#ifndef EDITOR_VCS_INTERFACE_H
+#define EDITOR_VCS_INTERFACE_H
 
-#include "scene/gui/base_button.h"
+#include "core/object.h"
+#include "core/ustring.h"
+#include "scene/gui/panel_container.h"
 
-class Button : public BaseButton {
+class EditorVCSInterface : public Object {
 
-	GDCLASS(Button, BaseButton);
+	GDCLASS(EditorVCSInterface, Object)
 
-public:
-	enum TextAlign {
-		ALIGN_LEFT,
-		ALIGN_CENTER,
-		ALIGN_RIGHT
-	};
-
-private:
-	bool flat;
-	String text;
-	String xl_text;
-	Ref<Texture> icon;
-	bool expand_icon;
-	bool clip_text;
-	TextAlign align;
-	float _internal_margin[4];
+	bool is_initialized;
 
 protected:
-	void _set_internal_margin(Margin p_margin, float p_value);
-	void _notification(int p_what);
+	static EditorVCSInterface *singleton;
+
 	static void _bind_methods();
 
+	// Implemented by addons as end points for the proxy functions
+	bool _initialize(String p_project_root_path);
+	bool _get_is_vcs_intialized();
+	Dictionary _get_modified_files_data();
+	void _stage_file(String p_file_path);
+	void _unstage_file(String p_file_path);
+	void _commit(String p_msg);
+	Array _get_file_diff(String p_file_path);
+	bool _shut_down();
+	String _get_project_name();
+	String _get_vcs_name();
+
 public:
-	virtual Size2 get_minimum_size() const;
+	static EditorVCSInterface *get_singleton();
+	static void set_singleton(EditorVCSInterface *p_singleton);
 
-	void set_text(const String &p_text);
-	String get_text() const;
+	bool is_addon_ready();
 
-	void set_icon(const Ref<Texture> &p_icon);
-	Ref<Texture> get_icon() const;
+	// Proxy functions to the editor for use
+	bool initialize(String p_project_root_path);
+	bool get_is_vcs_intialized();
+	Dictionary get_modified_files_data();
+	void stage_file(String p_file_path);
+	void unstage_file(String p_file_path);
+	void commit(String p_msg);
+	Array get_file_diff(String p_file_path);
+	bool shut_down();
+	String get_project_name();
+	String get_vcs_name();
 
-	void set_expand_icon(bool p_expand_icon);
-	bool is_expand_icon() const;
-
-	void set_flat(bool p_flat);
-	bool is_flat() const;
-
-	void set_clip_text(bool p_clip_text);
-	bool get_clip_text() const;
-
-	void set_text_align(TextAlign p_align);
-	TextAlign get_text_align() const;
-
-	Button(const String &p_text = String());
-	~Button();
+	EditorVCSInterface();
+	virtual ~EditorVCSInterface();
 };
 
-VARIANT_ENUM_CAST(Button::TextAlign);
-
-#endif
+#endif // !EDITOR_VCS_INTERFACE_H
