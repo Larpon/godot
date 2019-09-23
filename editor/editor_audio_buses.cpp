@@ -378,6 +378,7 @@ float EditorAudioBus::_scaled_db_to_normalized_volume(float db) {
 void EditorAudioBus::_show_value(float slider_value) {
 	String text = vformat("%10.1f dB", _normalized_volume_to_scaled_db(slider_value));
 
+	slider->set_tooltip(text);
 	audio_value_preview_label->set_text(text);
 	Vector2 slider_size = slider->get_size();
 	Vector2 slider_position = slider->get_global_position();
@@ -773,7 +774,7 @@ EditorAudioBus::EditorAudioBus(EditorAudioBuses *p_buses, bool p_is_master) {
 	is_master = p_is_master;
 	hovering_drop = false;
 
-	set_tooltip(TTR("Audio Bus, Drag and Drop to rearrange."));
+	set_tooltip(TTR("Drag & drop to rearrange."));
 
 	VBoxContainer *vb = memnew(VBoxContainer);
 	add_child(vb);
@@ -1439,7 +1440,7 @@ Size2 EditorAudioMeterNotches::get_minimum_size() const {
 	float width = 0;
 	float height = top_padding + btm_padding;
 
-	for (uint8_t i = 0; i < notches.size(); i++) {
+	for (int i = 0; i < notches.size(); i++) {
 		if (notches[i].render_db_value) {
 			width = MAX(width, font->get_string_size(String::num(Math::abs(notches[i].db_value)) + "dB").x);
 			height += font_height;
@@ -1473,7 +1474,7 @@ void EditorAudioMeterNotches::_draw_audio_notches() {
 	Ref<Font> font = get_font("font", "Label");
 	float font_height = font->get_height();
 
-	for (uint8_t i = 0; i < notches.size(); i++) {
+	for (int i = 0; i < notches.size(); i++) {
 		AudioNotch n = notches[i];
 		draw_line(Vector2(0, (1.0f - n.relative_position) * (get_size().y - btm_padding - top_padding) + top_padding),
 				Vector2(line_length, (1.0f - n.relative_position) * (get_size().y - btm_padding - top_padding) + top_padding),
