@@ -1482,8 +1482,9 @@ void RasterizerStorageGLES2::_update_shader(Shader *p_shader) const {
 	}
 
 	Error err = shaders.compiler.compile(p_shader->mode, p_shader->code, actions, p_shader->path, gen_code);
-
-	ERR_FAIL_COND(err != OK);
+	if (err != OK) {
+		return;
+	}
 
 	p_shader->shader->set_custom_shader_code(p_shader->custom_code_id, gen_code.vertex, gen_code.vertex_global, gen_code.fragment, gen_code.light, gen_code.fragment_global, gen_code.uniforms, gen_code.texture_uniforms, gen_code.custom_defines);
 
@@ -4886,7 +4887,6 @@ void RasterizerStorageGLES2::_render_target_allocate(RenderTarget *rt) {
 				}
 
 				glClearColor(1.0, 0.0, 1.0, 0.0);
-				glViewport(0, 0, rt->mip_maps[i].sizes[j].width, rt->mip_maps[i].sizes[j].height);
 				glClear(GL_COLOR_BUFFER_BIT);
 				if (used_depth) {
 					glClearDepth(1.0);
