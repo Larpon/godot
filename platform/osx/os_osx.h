@@ -31,6 +31,8 @@
 #ifndef OS_OSX_H
 #define OS_OSX_H
 
+#define BitMap _QDBitMap // Suppress deprecated QuickDraw definition.
+
 #include "camera_osx.h"
 #include "core/os/input.h"
 #include "crash_handler_osx.h"
@@ -50,6 +52,7 @@
 #include <ApplicationServices/ApplicationServices.h>
 #include <CoreVideo/CoreVideo.h>
 
+#undef BitMap
 #undef CursorShape
 
 class OS_OSX : public OS_Unix {
@@ -110,9 +113,6 @@ public:
 	NSOpenGLContext *context;
 
 	bool layered_window;
-	bool waiting_for_vsync;
-	NSCondition *vsync_condition;
-	CVDisplayLinkRef displayLink;
 
 	CursorShape cursor_shape;
 	NSCursor *cursors[CURSOR_MAX];
